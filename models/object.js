@@ -7,9 +7,8 @@ const ObjectSchema = new Schema({
     type: String,
     required: [true,'Name property is required']
   },
-  rank: {
-    type: String,
-    required: [false]
+  profession: {
+    type: String
   },
   available: {
     type: Boolean,

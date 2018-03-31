@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const Object = require('../models/object');
 
 router.get('/data',function(req,res){
+  console.log("GET REQUEST");
   res.send({type:'GET'});
 });
 
 router.post('/data',function(req,res){
   console.log(req.body);
-  res.send({
-    type:'POST',
-    name:req.body.name,
-    rank:req.body.rank
+  Object.create(req.body).then(function(object){
+    res.send(object);
   });
 });
 
