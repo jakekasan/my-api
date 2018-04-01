@@ -3,10 +3,7 @@ const router = express.Router();
 const Object = require('../models/object');
 
 router.get('/data',function(req,res,next){
-  // Object.find({}).then(function(objects){
-  //   res.send(objects);
-  // });
-
+  console.log("Get request for '/data'");
   Object.aggregate().near({
     near: [parseFloat(req.query.lng),parseFloat(req.query.lat)],
     maxDistance: 100000,
@@ -15,12 +12,6 @@ router.get('/data',function(req,res,next){
   }).then(function(objects){
     res.send(objects);
   })
-  // Object.geoNear(
-  //   {type:"Point",coordinates: [parseFloat(req.query.lng),parseFloat(req.query.lat)]},
-  //   {maxDistance: 100000, spherical: true}
-  // ).then(function(objects){
-  //   res.send(objects)
-  // });
 
 });
 

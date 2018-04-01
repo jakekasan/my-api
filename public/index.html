@@ -15,4 +15,119 @@
       </div>
     </div>
   </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+
+  <!-- Create React Component -->
+
+  <script type="text/babel">
+
+  class Objects extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.latRef = React.createRef();
+      this.lngRef = React.createRef();
+      this.state = {
+        objects: []
+      };
+
+    }
+    render() {
+      var objects = this.state.objects;
+      objects = objects.map(function(object,index){
+        //console.log(object);
+        return(
+          <li key={index}>
+            <span className={object.available}></span>
+            <span className="name">{object.name + "\t"}</span>
+            <span className="profession">{object.profession}</span>
+            <span className="dist">{(object.dist.calculated).toFixed(2)} km</span>
+          </li>
+        )
+      });
+
+      return(
+        <div id="obj-container">
+          <form id="search" onSubmit={this.handleSubmit}>
+            <label>Enter your latitude: </label>
+            <input type="text" ref={(element) => { this.lat = element }} placeholder="latitude" required />
+            <label>Enter your longitude: </label>
+            <input type="text" ref={(element) => { this.lng = element }} placeholder="longitude" required />
+            <input type="submit" value="Find people" />
+          </form>
+          <ul> {objects} </ul>
+        </div>
+      )
+    }
+
+    handleSubmit(e){
+      e.preventDefault();
+      var lng = this.lng.value;
+      var lat = this.lat.value;
+
+      fetch('/api/data?lng=' + lng + '&lat=' + lat).then(function(data){
+        console.log(data);
+        return data.json();
+      }).then((json) => {
+        console.log(json);
+        this.setState({
+          objects: json
+        });
+      });
+    }
+  }
+
+
+  // OLD METHOD for REACT
+  //
+  // var Objects = React.createClass({
+  //   getInitialState: function(){
+  //     return({
+  //       objects:[]
+  //     });
+  //   },
+  //   render: function(){
+  //     var objects = this.state.objects;
+  //     objects = objects.map(function(object,index){
+  //       return(
+  //         <li key={index}>
+  //           <span className={object.obj.available}></span>
+  //           <span className="name">{object.obj.name}</span>
+  //           <span className="profession">{object.obj.profession}</span>
+  //           <span className="dist">{Math.floor(object.dis / 1000)} km</span>
+  //         </li>
+  //       )
+  //     });
+  //     return(
+  //       <div id="obj-container">
+  //         <form id="search" onSubmit={this.handleSubmit}>
+  //           <label>Enter your latitude: </label>
+  //           <input type="text" ref="lat" placeholder="latitude" required />
+  //           <label>Enter your longitude: </label>
+  //           <input type="text" ref="lng" placeholder="longitude" required />
+  //           <input type="submit" value="Find people" />
+  //         </form>
+  //         <ul> {objects} </ul>
+  //       </div>
+  //     );
+  //   },
+  //   handleSubmit: function(e){
+  //     e.preventDefault();
+  //     var lng = this.refs.lng.value;
+  //     var lat = this.refs.lat.value;
+  //
+  //     fetch('/api/ninjas?lng=' + lng + '&lat=' + lat).then(function(data){
+  //       return data.json();
+  //     }).then(json => {
+  //       this.setState({
+  //         objects: json
+  //       });
+  //     });
+  //   }
+  // });
+
+  ReactDOM.render(<Objects />,document.getElementById("objects"));
+  </script>
 </html>
